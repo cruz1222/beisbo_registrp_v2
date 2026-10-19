@@ -1,0 +1,219 @@
+/* ==========================================================
+   Sistema de Control de Alumnos y Selección de Béisbol
+   Estilos propios (complementan Bootstrap 5)
+   ========================================================== */
+
+:root {
+  --navy: #0b1f3a;
+  --navy-2: #16345f;
+  --red: #c8102e;
+  --cream: #fbf7ee;
+}
+
+body {
+  background: #f3f5f9;
+  color: #1f2937;
+  min-height: 100vh;
+}
+
+/* ---------- Navbar ---------- */
+.app-navbar {
+  background: linear-gradient(90deg, var(--navy), var(--navy-2));
+  border-bottom: 3px solid var(--red);
+}
+.app-navbar .nav-link { border-radius: .5rem; padding: .5rem .85rem; }
+.app-navbar .nav-link.active { background: rgba(255, 255, 255, .15); color: #fff; }
+
+/* ---------- Hero ---------- */
+.hero {
+  position: relative;
+  overflow: hidden;
+  background:
+    radial-gradient(circle at 85% 20%, rgba(255, 255, 255, .12) 0 90px, transparent 91px),
+    linear-gradient(135deg, var(--navy) 0%, var(--navy-2) 60%, #234a82 100%);
+  box-shadow: 0 10px 30px rgba(11, 31, 58, .25);
+}
+/* Costuras de pelota (decorativo) */
+.hero::after {
+  content: "";
+  position: absolute;
+  right: -60px; bottom: -60px;
+  width: 260px; height: 260px;
+  border-radius: 50%;
+  background: var(--cream);
+  opacity: .12;
+  border: 6px dashed var(--red);
+}
+.hero-content { position: relative; z-index: 1; }
+
+/* ---------- Tarjetas ---------- */
+.card { border: 0; border-radius: 1rem; }
+.card-hover { transition: transform .15s ease, box-shadow .15s ease; }
+.card-hover:hover { transform: translateY(-3px); box-shadow: 0 .75rem 1.5rem rgba(0, 0, 0, .12) !important; }
+
+.icon-circle {
+  width: 56px; height: 56px;
+  display: inline-flex; align-items: center; justify-content: center;
+  border-radius: 50%;
+  font-size: 1.6rem;
+}
+
+/* ---------- Semáforo de calificaciones ---------- */
+.badge-sem {
+  display: inline-flex;
+  align-items: center;
+  gap: .35rem;
+  padding: .3rem .65rem;
+  border-radius: 999px;
+  font-weight: 600;
+  font-size: .82rem;
+  border: 1px solid transparent;
+  white-space: nowrap;
+}
+.sem-verde    { background: #d1f2dd; color: #0f5132; border-color: #a3dfb8; }
+.sem-amarillo { background: #fff3cd; color: #664d03; border-color: #ffe08a; }
+.sem-rojo     { background: #f8d7da; color: #842029; border-color: #f1aeb5; }
+.sem-gris     { background: #e9ecef; color: #495057; border-color: #ced4da; }
+
+/* Tarjetas de materia con borde de color */
+.materia-card { border-left: 6px solid #ced4da; }
+.materia-card.verde    { border-left-color: #198754; }
+.materia-card.amarillo { border-left-color: #ffc107; }
+.materia-card.rojo     { border-left-color: #dc3545; }
+
+.comentario {
+  background: #f8f9fa;
+  border-left: 3px solid #adb5bd;
+  border-radius: .35rem;
+  padding: .5rem .75rem;
+  font-size: .9rem;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
+/* ---------- Estadísticas ---------- */
+.stat-card .stat-value { font-size: 1.9rem; font-weight: 700; line-height: 1; }
+.stat-card .stat-label { font-size: .8rem; text-transform: uppercase; letter-spacing: .04em; color: #6c757d; }
+.stat-card.verde  { border-top: 4px solid #198754; }
+.stat-card.rojo   { border-top: 4px solid #dc3545; }
+.stat-card.azul   { border-top: 4px solid #0d6efd; }
+.stat-card.navy   { border-top: 4px solid var(--navy); }
+.stat-card.gold   { border-top: 4px solid #ffc107; }
+
+/* ---------- Posiciones y niveles ---------- */
+.pos-chip {
+  display: inline-block;
+  background: var(--navy);
+  color: #fff;
+  border-radius: .4rem;
+  padding: .1rem .5rem;
+  margin: 0 .2rem .2rem 0;
+  font-size: .75rem;
+  font-weight: 600;
+}
+.nivel {
+  display: inline-block;
+  padding: .2rem .6rem;
+  border-radius: 999px;
+  font-size: .78rem;
+  font-weight: 600;
+}
+.nivel-na { background: #e9ecef; color: #495057; }
+.nivel-p  { background: #cfe2ff; color: #084298; }
+.nivel-i  { background: #d1e7dd; color: #0a3622; }
+.nivel-a  { background: #e2d9f3; color: #432874; }
+.nivel-t  { background: #ffe5b4; color: #7a4a00; }
+
+/* Selector de posiciones (checkbox en forma de botón) */
+.pos-toggle + .btn { min-width: 3.2rem; }
+.pos-toggle:checked + .btn {
+  background: var(--navy);
+  border-color: var(--navy);
+  color: #fff;
+}
+
+/* ---------- Tablas ---------- */
+.table > :not(caption) > * > * { padding: .75rem .75rem; }
+.table tbody tr { transition: background .1s; }
+
+/* ---------- Tarjeta de alumno (móvil y selección) ---------- */
+.student-card { border-left: 6px solid #ced4da; }
+.student-card.verde    { border-left-color: #198754; }
+.student-card.amarillo { border-left-color: #ffc107; }
+.student-card.rojo     { border-left-color: #dc3545; }
+.student-card.seleccionado { background: #f1fbf5; }
+
+.mini-materia {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: .5rem;
+  font-size: .85rem;
+  padding: .15rem 0;
+}
+
+/* Cobertura por posición */
+.cobertura-item {
+  border: 1px dashed #ced4da;
+  border-radius: .75rem;
+  padding: .5rem .75rem;
+  background: #fff;
+  min-height: 64px;
+}
+.cobertura-item.cubierta { border: 1px solid #a3dfb8; background: #f1fbf5; }
+.cobertura-item .pos { font-weight: 700; color: var(--navy); }
+
+/* ---------- Formularios ---------- */
+.form-control:focus, .form-select:focus {
+  border-color: var(--navy-2);
+  box-shadow: 0 0 0 .2rem rgba(22, 52, 95, .15);
+}
+
+/* ---------- Responsive ---------- */
+@media (max-width: 575.98px) {
+  .display-5 { font-size: 1.9rem; }
+  .stat-card .stat-value { font-size: 1.5rem; }
+  .toast-container { left: 0; right: 0; }
+  .toast-container .toast { width: 100%; }
+}
+
+/* Comentarios escritos por el alumno */
+.comentario-alumno {
+  background: #eef7f0;
+  border-left-color: #198754;
+}
+
+/* ---------- Calificaciones por unidad ---------- */
+.unidades-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: .5rem;
+}
+@media (min-width: 768px) {
+  .unidades-grid { grid-template-columns: repeat(8, minmax(0, 1fr)); }
+}
+.unidad-input {
+  display: flex;
+  flex-direction: column;
+  gap: .2rem;
+  margin: 0;
+  font-size: .7rem;
+  font-weight: 700;
+  letter-spacing: .05em;
+  color: #6c757d;
+}
+.unidad-input input { text-align: center; padding-left: .25rem; padding-right: .25rem; }
+
+.unidades-chips { display: flex; flex-wrap: wrap; gap: .45rem; }
+.unit-chip {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  min-width: 3.2rem;
+  padding: .35rem .55rem;
+  border: 1px solid transparent;
+  border-radius: .65rem;
+  line-height: 1.15;
+}
+.unit-chip small { font-size: .65rem; font-weight: 700; letter-spacing: .05em; opacity: .75; }
+.unit-chip strong { font-size: 1.05rem; }

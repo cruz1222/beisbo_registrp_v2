@@ -1,0 +1,425 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Sistema web de control de alumnos y selección de béisbol">
+  <title>Control de Alumnos · Selección de Béisbol</title>
+
+  <!-- Bootstrap 5 + Bootstrap Icons (CDN) -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
+  <!-- Estilos propios -->
+  <link href="style.css" rel="stylesheet">
+</head>
+<body>
+
+<!-- =========================================================
+     BARRA DE NAVEGACIÓN
+     ========================================================= -->
+<nav class="navbar navbar-expand-lg navbar-dark app-navbar sticky-top">
+  <div class="container">
+    <a class="navbar-brand fw-bold" href="#/inicio">
+      <i class="bi bi-trophy-fill me-2"></i>Selección de Béisbol
+    </a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navMenu"
+            aria-controls="navMenu" aria-expanded="false" aria-label="Abrir menú">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navMenu">
+      <ul class="navbar-nav ms-auto align-items-lg-center gap-lg-1">
+        <li class="nav-item"><a class="nav-link" data-nav="inicio" href="#/inicio"><i class="bi bi-house-door me-1"></i>Inicio</a></li>
+        <li class="nav-item"><a class="nav-link" data-nav="registro" href="#/registro"><i class="bi bi-person-plus me-1"></i>Registrarme</a></li>
+        <li class="nav-item"><a class="nav-link" data-nav="perfil" href="#/perfil"><i class="bi bi-person-badge me-1"></i>Mi perfil</a></li>
+        <li class="nav-item"><a class="nav-link" data-nav="manager" href="#/manager"><i class="bi bi-shield-lock me-1"></i><span id="navManagerLabel">Manager</span></a></li>
+        <li class="nav-item d-none" id="navLogoutItem">
+          <button class="btn btn-sm btn-outline-light ms-lg-2 mt-2 mt-lg-0" id="btnLogout" type="button">
+            <i class="bi bi-box-arrow-right me-1"></i>Cerrar sesión
+          </button>
+        </li>
+      </ul>
+    </div>
+  </div>
+</nav>
+
+<main class="container py-4" id="app">
+
+  <div id="configWarning" class="alert alert-warning d-none" role="alert">
+    <strong>Falta configurar Supabase.</strong> Abre <code>app.js</code> y pon tu <code>SUPABASE_URL</code> y tu <code>SUPABASE_ANON_KEY</code> en la sección <code>CONFIG</code> (ver README).
+  </div>
+
+  <!-- =======================================================
+       VISTA: INICIO
+       ======================================================= -->
+  <section data-view="inicio" class="d-none">
+    <div class="hero text-white rounded-4 p-4 p-md-5 mb-4">
+      <div class="hero-content">
+        <span class="badge bg-light text-dark mb-3"><i class="bi bi-calendar-event me-1"></i>Temporada 2026</span>
+        <h1 class="display-5 fw-bold">Control de Alumnos<br>y Selección de Béisbol</h1>
+        <p class="lead mb-0">Registra tus materias y tus calificaciones por unidad, agrega comentarios y conoce tu estatus dentro del equipo.</p>
+      </div>
+    </div>
+
+    <div class="row g-4">
+      <div class="col-12 col-md-6">
+        <div class="card h-100 shadow-sm card-hover">
+          <div class="card-body p-4">
+            <div class="icon-circle bg-success-subtle text-success mb-3"><i class="bi bi-mortarboard-fill"></i></div>
+            <h2 class="h4">Soy aspirante / jugador</h2>
+            <p class="text-muted">Sin contraseña. Regístrate con tus datos, tus materias y tus calificaciones, o consulta tu perfil con tu número de control para agregar comentarios.</p>
+            <div class="d-grid d-sm-flex gap-2">
+              <a href="#/registro" class="btn btn-success"><i class="bi bi-person-plus me-1"></i>Registrarme</a>
+              <a href="#/perfil" class="btn btn-outline-success"><i class="bi bi-search me-1"></i>Ver mi perfil</a>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-12 col-md-6">
+        <div class="card h-100 shadow-sm card-hover">
+          <div class="card-body p-4">
+            <div class="icon-circle bg-danger-subtle text-danger mb-3"><i class="bi bi-clipboard2-data-fill"></i></div>
+            <h2 class="h4">Soy Manager</h2>
+            <p class="text-muted">Acceso con correo y contraseña. Administra alumnos, calificaciones, posiciones y la selección del equipo.</p>
+            <a href="#/manager" class="btn btn-danger"><i class="bi bi-shield-lock me-1"></i>Entrar al panel</a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card shadow-sm mt-4">
+      <div class="card-body">
+        <h2 class="h6 text-uppercase text-muted mb-3">Semáforo de calificaciones</h2>
+        <div class="row g-3">
+          <div class="col-12 col-md-4"><span class="badge-sem sem-verde"><i class="bi bi-check-circle-fill"></i> ≥ 80 Excelente</span><div class="small text-muted mt-1">Apto / prioritario para la selección.</div></div>
+          <div class="col-12 col-md-4"><span class="badge-sem sem-amarillo"><i class="bi bi-exclamation-triangle-fill"></i> 70 – 79 Regular</span><div class="small text-muted mt-1">Con observaciones.</div></div>
+          <div class="col-12 col-md-4"><span class="badge-sem sem-rojo"><i class="bi bi-x-octagon-fill"></i> &lt; 70 En riesgo</span><div class="small text-muted mt-1">No apto / alerta académica.</div></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- =======================================================
+       VISTA: REGISTRO DE ASPIRANTE
+       ======================================================= -->
+  <section data-view="registro" class="d-none">
+    <div class="row justify-content-center">
+      <div class="col-12 col-lg-8">
+        <h1 class="h3 mb-1"><i class="bi bi-person-plus-fill text-success me-2"></i>Registro de aspirante</h1>
+        <p class="text-muted">Captura tus datos, las materias que cursas y tu calificación en cada unidad. Después podrás consultar tu perfil con tu número de control para agregar comentarios.</p>
+
+        <form id="formRegistro" class="card shadow-sm" novalidate>
+          <div class="card-body p-4">
+            <div id="regError" class="alert alert-danger d-none" role="alert"></div>
+
+            <div class="mb-3">
+              <label class="form-label" for="regNombre">Nombre completo *</label>
+              <input type="text" id="regNombre" class="form-control" maxlength="80" required autocomplete="name">
+            </div>
+            <div class="row g-3 mb-3">
+              <div class="col-12 col-md-5">
+                <label class="form-label" for="regId">Número de control *</label>
+                <input type="text" id="regId" class="form-control" maxlength="20" required placeholder="Ej. A2026001" autocomplete="off">
+                <div class="form-text">4–20 caracteres: letras, números o guion.</div>
+              </div>
+              <div class="col-12 col-md-7">
+                <label class="form-label" for="regCarrera">Carrera *</label>
+                <input type="text" id="regCarrera" class="form-control" maxlength="80" required list="listaCarreras" placeholder="Ej. Ingeniería en Sistemas">
+              </div>
+            </div>
+
+            <hr>
+            <div class="d-flex justify-content-between align-items-center mb-2">
+              <h2 class="h6 mb-0"><i class="bi bi-journal-bookmark me-1"></i>Materias y calificaciones por unidad *</h2>
+              <button type="button" class="btn btn-sm btn-outline-success" data-action="add-reg-row"><i class="bi bi-plus-lg me-1"></i>Agregar materia</button>
+            </div>
+            <div class="form-text mb-2">Escribe la materia y captura la calificación de cada unidad (0–100). Hasta 8 unidades; deja vacías las que aún no tengas.</div>
+            <div id="regMaterias"></div>
+          </div>
+          <div class="card-footer bg-transparent p-3 d-grid d-sm-flex justify-content-sm-end gap-2">
+            <a href="#/inicio" class="btn btn-outline-secondary">Cancelar</a>
+            <button type="submit" class="btn btn-success"><i class="bi bi-check2-circle me-1"></i>Registrarme</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </section>
+
+  <!-- =======================================================
+       VISTA: PERFIL DEL ALUMNO (consulta + comentarios)
+       ======================================================= -->
+  <section data-view="perfil" class="d-none">
+    <div class="row justify-content-center">
+      <div class="col-12 col-lg-9">
+        <h1 class="h3 mb-3"><i class="bi bi-person-badge-fill text-success me-2"></i>Mi perfil</h1>
+
+        <form id="formBuscarPerfil" class="card shadow-sm mb-3" novalidate>
+          <div class="card-body p-4">
+            <label class="form-label" for="perfilId">Consulta tu perfil con tu número de control</label>
+            <div class="input-group">
+              <input type="text" id="perfilId" class="form-control" placeholder="Ej. A2026001" maxlength="20" autocomplete="off">
+              <button class="btn btn-success" type="submit"><i class="bi bi-search me-1"></i>Consultar</button>
+            </div>
+            <div id="perfilError" class="text-danger small mt-2 d-none"></div>
+          </div>
+        </form>
+
+        <div id="perfilResultado"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- =======================================================
+       VISTA: MANAGER (login + panel)
+       ======================================================= -->
+  <section data-view="manager" class="d-none">
+
+    <!-- Login -->
+    <div id="managerLogin" class="row justify-content-center d-none">
+      <div class="col-12 col-md-8 col-lg-5">
+        <form id="formLogin" class="card shadow-sm" novalidate>
+          <div class="card-body p-4">
+            <div class="text-center mb-3">
+              <div class="icon-circle bg-danger-subtle text-danger mx-auto mb-2"><i class="bi bi-shield-lock-fill"></i></div>
+              <h1 class="h4 mb-0">Acceso de Manager</h1>
+              <p class="text-muted small">Ingresa con tu cuenta de manager</p>
+            </div>
+            <div id="loginError" class="alert alert-danger py-2 d-none" role="alert"></div>
+            <div class="mb-3">
+              <label class="form-label" for="loginUser">Correo electrónico</label>
+              <input type="email" id="loginUser" class="form-control" autocomplete="username" required>
+            </div>
+            <div class="mb-3">
+              <label class="form-label" for="loginPass">Contraseña</label>
+              <input type="password" id="loginPass" class="form-control" autocomplete="current-password" required>
+            </div>
+            <button type="submit" class="btn btn-danger w-100"><i class="bi bi-box-arrow-in-right me-1"></i>Entrar</button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <!-- Panel -->
+    <div id="managerPanel" class="d-none">
+      <div class="d-flex flex-wrap justify-content-between align-items-center gap-2 mb-3">
+        <div>
+          <h1 class="h3 mb-0"><i class="bi bi-clipboard2-data-fill text-danger me-2"></i>Panel del Manager</h1>
+          <div class="text-muted small">Control total de alumnos, calificaciones y selección.</div>
+        </div>
+        <div class="d-flex gap-2">
+          <button class="btn btn-danger" data-action="new-student"><i class="bi bi-plus-lg me-1"></i>Nuevo alumno</button>
+          <div class="dropdown">
+            <button class="btn btn-outline-secondary dropdown-toggle" data-bs-toggle="dropdown" type="button"><i class="bi bi-database me-1"></i>Datos</button>
+            <ul class="dropdown-menu dropdown-menu-end">
+              <li><button class="dropdown-item" data-action="export" type="button"><i class="bi bi-download me-2"></i>Exportar respaldo (JSON)</button></li>
+              <li><label class="dropdown-item mb-0" for="fileImport" role="button"><i class="bi bi-upload me-2"></i>Importar respaldo (JSON)</label></li>
+              <li><button class="dropdown-item" data-action="migrate-local" type="button"><i class="bi bi-cloud-arrow-up me-2"></i>Migrar datos locales anteriores</button></li>
+              <li><button class="dropdown-item" data-action="demo" type="button"><i class="bi bi-magic me-2"></i>Cargar datos de ejemplo</button></li>
+              <li><hr class="dropdown-divider"></li>
+              <li><button class="dropdown-item text-danger" data-action="wipe" type="button"><i class="bi bi-trash3 me-2"></i>Borrar todos los datos</button></li>
+            </ul>
+            <input type="file" id="fileImport" accept="application/json,.json" class="d-none">
+          </div>
+        </div>
+      </div>
+
+      <!-- Estadísticas -->
+      <div class="row g-3 mb-4" id="statsRow"></div>
+
+      <!-- Pestañas -->
+      <ul class="nav nav-pills mb-3" id="managerTabs" role="tablist">
+        <li class="nav-item" role="presentation">
+          <button class="nav-link active" data-bs-toggle="pill" data-bs-target="#paneAlumnos" type="button" role="tab"><i class="bi bi-people-fill me-1"></i>Alumnos</button>
+        </li>
+        <li class="nav-item" role="presentation">
+          <button class="nav-link" data-bs-toggle="pill" data-bs-target="#paneSeleccion" type="button" role="tab"><i class="bi bi-trophy-fill me-1"></i>Selección del equipo</button>
+        </li>
+      </ul>
+
+      <div class="tab-content">
+        <!-- ================= TAB ALUMNOS ================= -->
+        <div class="tab-pane fade show active" id="paneAlumnos" role="tabpanel">
+          <div class="card shadow-sm mb-3">
+            <div class="card-body">
+              <div class="row g-2">
+                <div class="col-12 col-lg-4">
+                  <div class="input-group">
+                    <span class="input-group-text"><i class="bi bi-search"></i></span>
+                    <input type="search" id="fBuscar" class="form-control" placeholder="Buscar nombre, control o materia">
+                  </div>
+                </div>
+                <div class="col-6 col-lg-2"><select id="fCarrera" class="form-select" aria-label="Carrera"><option value="">Todas las carreras</option></select></div>
+                <div class="col-6 col-lg-2"><select id="fNivel" class="form-select" aria-label="Nivel"><option value="">Todos los niveles</option></select></div>
+                <div class="col-6 col-lg-2"><select id="fPosicion" class="form-select" aria-label="Posición"><option value="">Todas las posiciones</option></select></div>
+                <div class="col-6 col-lg-2">
+                  <select id="fSemaforo" class="form-select" aria-label="Semáforo">
+                    <option value="">Todo el semáforo</option>
+                    <option value="verde">🟢 Excelente</option>
+                    <option value="amarillo">🟡 Regular</option>
+                    <option value="rojo">🔴 En riesgo</option>
+                    <option value="gris">⚪ Sin calificar</option>
+                  </select>
+                </div>
+                <div class="col-6 col-lg-3">
+                  <select id="fEstatus" class="form-select" aria-label="Estatus de selección">
+                    <option value="">Seleccionados y no</option>
+                    <option value="sel">Solo seleccionados</option>
+                    <option value="nosel">Solo no seleccionados</option>
+                  </select>
+                </div>
+                <div class="col-6 col-lg-2 d-grid"><button id="btnLimpiarFiltros" class="btn btn-outline-secondary" type="button"><i class="bi bi-x-circle me-1"></i>Limpiar</button></div>
+                <div class="col-12 col-lg-7 d-flex align-items-center text-muted small" id="contadorResultados"></div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Tabla (escritorio) -->
+          <div class="card shadow-sm d-none d-lg-block">
+            <div class="table-responsive">
+              <table class="table table-hover align-middle mb-0">
+                <thead class="table-light">
+                  <tr>
+                    <th>Alumno</th><th>Carrera</th><th>Materias</th><th>Promedio</th>
+                    <th>Nivel</th><th>Posiciones</th><th>Selección</th><th class="text-end">Acciones</th>
+                  </tr>
+                </thead>
+                <tbody id="tablaAlumnos"></tbody>
+              </table>
+            </div>
+          </div>
+
+          <!-- Tarjetas (móvil / tablet) -->
+          <div class="row g-3 d-lg-none" id="cardsAlumnos"></div>
+
+          <div id="sinResultados" class="text-center text-muted py-5 d-none">
+            <i class="bi bi-inbox display-4 d-block mb-2"></i>
+            <p class="mb-2">No hay alumnos que coincidan.</p>
+            <button class="btn btn-outline-danger btn-sm" data-action="demo" type="button"><i class="bi bi-magic me-1"></i>Cargar datos de ejemplo</button>
+          </div>
+        </div>
+
+        <!-- ================= TAB SELECCIÓN ================= -->
+        <div class="tab-pane fade" id="paneSeleccion" role="tabpanel">
+          <div class="card shadow-sm mb-3">
+            <div class="card-body">
+              <div class="row g-2 align-items-center">
+                <div class="col-12 col-md-4">
+                  <select id="selPosicion" class="form-select" aria-label="Filtrar candidatos por posición"><option value="">Candidatos: todas las posiciones</option></select>
+                </div>
+                <div class="col-12 col-md-4">
+                  <div class="form-check form-switch">
+                    <input class="form-check-input" type="checkbox" id="selSoloElegibles">
+                    <label class="form-check-label" for="selSoloElegibles">Solo prioritarios (🟢, sin materias en rojo)</label>
+                  </div>
+                </div>
+                <div class="col-12 col-md-4 d-grid d-md-flex justify-content-md-end gap-2">
+                  <button class="btn btn-success btn-sm" data-action="sel-priority" type="button"><i class="bi bi-stars me-1"></i>Seleccionar prioritarios</button>
+                  <button class="btn btn-outline-danger btn-sm" data-action="sel-clear" type="button"><i class="bi bi-arrow-counterclockwise me-1"></i>Limpiar</button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="row g-3">
+            <div class="col-12 col-xl-6">
+              <h2 class="h6 text-uppercase text-muted">Candidatos <span class="badge text-bg-secondary" id="selCandCount">0</span></h2>
+              <div id="selCandidatos" class="vstack gap-2"></div>
+            </div>
+            <div class="col-12 col-xl-6">
+              <h2 class="h6 text-uppercase text-muted">Equipo seleccionado <span class="badge text-bg-success" id="selEquipoCount">0</span></h2>
+              <div id="selEquipo" class="vstack gap-2 mb-4"></div>
+
+              <h2 class="h6 text-uppercase text-muted">Cobertura por posición</h2>
+              <div id="selCobertura" class="row g-2"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer class="text-center text-muted small py-4">
+  Sistema de Control de Alumnos y Selección de Béisbol · Datos guardados en Supabase
+</footer>
+
+<!-- Sugerencias de carreras (autocompletado) -->
+<datalist id="listaCarreras"></datalist>
+
+<!-- =========================================================
+     MODAL: ALTA / EDICIÓN DE ALUMNO (Manager)
+     ========================================================= -->
+<div class="modal fade" id="studentModal" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog modal-xl modal-dialog-scrollable modal-fullscreen-lg-down">
+    <form class="modal-content" id="formAlumno" novalidate>
+      <div class="modal-header">
+        <h2 class="modal-title h5" id="mTitle">Alumno</h2>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+      </div>
+      <div class="modal-body">
+        <div id="mError" class="alert alert-danger d-none" role="alert"></div>
+
+        <h3 class="h6 text-uppercase text-muted">Datos generales</h3>
+        <div class="row g-3 mb-4">
+          <div class="col-12 col-md-6"><label class="form-label" for="mNombre">Nombre completo *</label><input id="mNombre" class="form-control" maxlength="80" required></div>
+          <div class="col-12 col-md-6"><label class="form-label" for="mId">Número de control *</label><input id="mId" class="form-control" maxlength="20" required></div>
+          <div class="col-12"><label class="form-label" for="mCarrera">Carrera *</label><input id="mCarrera" class="form-control" maxlength="80" required list="listaCarreras"></div>
+        </div>
+
+        <h3 class="h6 text-uppercase text-muted">Gestión deportiva</h3>
+        <div class="row g-3 mb-4">
+          <div class="col-12 col-md-4"><label class="form-label" for="mNivel">Nivel deportivo</label><select id="mNivel" class="form-select"></select></div>
+          <div class="col-12 col-md-4">
+            <label class="form-label" for="mEstatus">Estatus en la selección</label>
+            <select id="mEstatus" class="form-select">
+              <option value="no">No seleccionado</option>
+              <option value="si">Seleccionado</option>
+            </select>
+          </div>
+          <div class="col-12">
+            <label class="form-label d-block">Posiciones que puede jugar</label>
+            <div id="mPosiciones" class="d-flex flex-wrap gap-2"></div>
+          </div>
+        </div>
+
+        <div class="d-flex flex-wrap justify-content-between align-items-center mb-2">
+          <h3 class="h6 text-uppercase text-muted mb-0">Materias, calificaciones y observaciones</h3>
+          <div class="d-flex align-items-center gap-2">
+            <span class="small text-muted">Promedio:</span><span id="mPromedio"></span>
+            <button type="button" class="btn btn-sm btn-outline-success" data-action="add-modal-materia"><i class="bi bi-plus-lg me-1"></i>Materia</button>
+          </div>
+        </div>
+        <div id="mMaterias"></div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancelar</button>
+        <button type="submit" class="btn btn-danger"><i class="bi bi-save me-1"></i>Guardar cambios</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- MODAL: CONFIRMACIÓN GENÉRICA -->
+<div class="modal fade" id="confirmModal" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2 class="modal-title h5" id="confirmTitle">Confirmar</h2>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+      </div>
+      <div class="modal-body" id="confirmMessage"></div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancelar</button>
+        <button type="button" class="btn btn-danger" id="confirmOk">Confirmar</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Contenedor de notificaciones -->
+<div class="toast-container position-fixed bottom-0 end-0 p-3" id="toastContainer"></div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
